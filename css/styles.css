@@ -1,5 +1,4 @@
 /*Customización carousel*/
-
 /*encajar imagen al ancho de la pantalla y alto*/
 .img-carousel {
     height: 450px;
@@ -57,3 +56,34 @@
       height: 32px;
     }
   }
+
+/*Transition para efecto de img card product*/
+.product-img{
+    -webkit-transition:all .9s ease; 
+    -moz-transition:all .9s ease; 
+    -o-transition:all .9s ease;
+    -ms-transition:all .9s ease; 
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+/*Hover effect for card de products*/
+.card-product:hover .product-img{
+    opacity: 0.7;
+    -webkit-transform:scale(1.25);
+    -moz-transform:scale(1.25);
+    -ms-transform:scale(1.25);
+    -o-transform:scale(1.25);
+    transform:scale(1.25);
+}
+
+/*Customizar badge de card product*/
+.badge {
+    background: rgb(6,3,65);
+    background: linear-gradient(90deg, rgba(6,3,65,1) 0%, rgb(180, 174, 174) 100%);
+}
+
+/*Class para esconder badges de descuento*/
+.display_none {
+    display: none;    
+}
