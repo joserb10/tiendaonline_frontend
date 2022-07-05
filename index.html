@@ -14,7 +14,77 @@
         <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
-        <h1 class="text-dark">hola mundo</h1>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <!-- Logo BSale -->
+                <a class="navbar-brand" href="#!">
+                    <img class="imgLogo bg-dark rounded" src="https://dojiw2m9tvv09.cloudfront.net/16738/2/img-logos-logo-bsale-blanco-mobile.png" alt="">
+                </a>
+                <!-- Navegacion-->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!">Productos</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <button class="btn btn-outline-dark" type="submit">
+                            <i class="bi-cart-fill me-1"></i>
+                            Carrito
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-dark">
+            <div id="carousel" class="carousel carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active h-50" data-bs-interval="3000">
+                    <img src="assets/imgs-carousel/mojito-drink-with-lime-lemon-and-mint-on-wood-table.jpg" class="d-block w-100 img-carousel">
+                    <div class="position-absolute caption-img-carousel-right w-40">
+                        <h1 class="text-white display-2 front-weight-bold">Bebidas Refrescantes</h1>
+                        <p class="text-white">En TiendaOnlineBSale podrás encontrar todo tipo de bedida refrescantes como gaseosas, tragos, etc.</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item" data-bs-interval="3000">
+                    <img src="assets/imgs-carousel/friends-laughing .jpg" class="d-block w-100 img-carousel">
+                    <div class="position-absolute caption-img-carousel-left w-40">
+                        <h1 class="text-white display-2 front-weight-bold">Disfruta con Amigos</h1>
+                        <p class="text-white">Al comprar una bebida, el segundo tiene un descuento especial para disfrutar con amigos.</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="assets/imgs-carousel/glass-bottles-of-beer-with-glass-and-ice-on-dark-background.jpg" class="d-block w-100 img-carousel">
+                    <div class="position-absolute caption-img-carousel-right w-40">
+                        <h1 class="text-white display-2 front-weight-bold">Por Tiempo Limitado</h1>
+                        <p class="text-white">Aprovecha los descuentos antes que desaparezcan el fin de semana.</p>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+        </header>
         <!-- Bootstrap CDN JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Script Javascript-->

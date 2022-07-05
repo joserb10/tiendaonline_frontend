@@ -1,0 +1,21 @@
+/*Customización carousel*/
+
+/*encajar imagen al ancho de la pantalla y alto*/
+.img-carousel {
+    height: 450px;
+    object-fit: cover;
+}
+
+/*alinear texto de caption a la derecha*/
+.caption-img-carousel-right {
+    top: 180px;
+    right: 30px;
+    text-align: right;
+}
+
+/*alinear texto de caption a la izquierda*/
+.caption-img-carousel-left {
+    top: 180px;
+    left: 30px;
+    text-align: left;
+}
