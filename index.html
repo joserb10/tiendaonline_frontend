@@ -30,11 +30,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#header">Home</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">Productos</a></li>
+                                <li><a class="dropdown-item" href="#section-products">Productos</a></li>
                                 <li><hr class="dropdown-divider" /></li>
                             </ul>
                         </li>
@@ -50,7 +50,7 @@
             </div>
         </nav>
         <!-- Header-->
-        <header class="bg-dark">
+        <header class="bg-dark" id="header">
             <div id="carousel" class="carousel carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                   <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -99,12 +99,17 @@
             </div>
         </section>
         <!-- Section Productos-->
-        <section class="py-5">
+        <section class="py-4" id="section-products">
             <div class="container px-4 px-lg-5 mt-5">
                 <div id="containerProducts" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 </div>
             </div>
         </section>
+        <!-- Pagination -->
+        <nav aria-label="..." class="d-flex justify-content-center px-4">
+            <ul class="pagination pagination-lg overflow-auto" id="containerPagination">
+            </ul>
+        </nav>
         <!-- Bootstrap CDN JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Axios CDN-->

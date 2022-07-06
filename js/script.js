@@ -5,6 +5,8 @@ const apiProducts = "products"
 
 /*Variable global para almacenar los productos*/
 var products = [];
+/*Variable total paginas de grupos de 8 productos*/
+var totalPages;
 
 /*Obtener todas las categorías para mostrarlas al usuario*/
 function getCategories() {
@@ -58,9 +60,14 @@ function getAllProducts() {
             //Manejar success
             console.log(response);
             //Almacenar data en array products
-            products = response.data;
+            products = response.data.products;
+            //Setear totalPages
+            totalPages = response.data.totalPages;
             //Renderizar productos
             renderProducts(products);
+            //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
+            let queryActive = '';
+            renderTotalPages(totalPages,queryActive);
         })
         .catch(function (error) {
             //Manejar error
@@ -75,8 +82,9 @@ function getAllProducts() {
 
 /*Generar cada elemento html por producto al ingresar a la pagina*/
 function renderProducts(products) {
-    //Obtener elemento contenedor de los productos
+    //Obtener elemento contenedor de los productos y limpiarlo si es que tiene elementos
     let containerProducts = $('#containerProducts');
+    containerProducts.empty();
 
     //Recorrer initialProducts para generar elementos
     for (let i = 0; i < products.length; i++) {
@@ -128,6 +136,56 @@ function renderProducts(products) {
         `);        
     }
 }
+
+/*Crear elementos de Pagination*/
+function renderTotalPages(totalPages, queryActive) {
+    //Obtener elemento contenedor de pagination y limpiarlo si es que tiene elementos
+    let containerPagination = $('#containerPagination');
+    containerPagination.empty();
+
+    //Recorrer la cantidad de veces de totalPages para crear la lista de pagination
+    //Añadir el elemento con el evento click para poder hacer la peticion a la pagina deseada
+    for (let i = 0; i < totalPages; i++) {
+        containerPagination.append(`<li class="page-item"><a class="page-link" href="#section-products" 
+        onclick="getProductsPaginated(`+ i +`,'`+ queryActive +`')">`+ (i+1) +`</a></li>`);         
+    }
+}
+
+/*Obtener productos de una página específica*/
+function getProductsPaginated(pageNro, queryActive) {
+    let urlApi;
+    //Formar la url completa para el request con el parametro queryActive o sin el si esta vacio
+    if (queryActive.length > 0) {
+        urlApi = urlbaseApiRest+apiProducts+'?pageNo='+pageNro+'&'+queryActive;
+    } else {
+        urlApi = urlbaseApiRest+apiProducts+'?pageNo='+pageNro;
+    }
+
+    //request api products
+    axios.get(urlApi)
+        .then(function (response) {
+            //Manejar success
+            console.log(response);
+            //Almacenar data en array products
+            products = response.data.products;
+            //Setear totalPages
+            totalPages = response.data.totalPages;
+            //Renderizar productos
+            renderProducts(products);
+            //Renderizar totalPages
+            renderTotalPages(totalPages);
+        })
+        .catch(function (error) {
+            //Manejar error
+            console.log(error);
+        })
+        .then(function () {
+            //Siempre se ejecuta
+            //Esconder spinner al terminar el request
+            $('.spinner').hide();
+        });
+}
+
 
 /* Ejecutar funciones getCategories y getAllProducts */
 function startup() {
