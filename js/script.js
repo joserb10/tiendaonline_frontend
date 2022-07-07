@@ -47,7 +47,8 @@ function renderCategories(categories) {
     for (let i = 0; i < categories.length; i++) {
         const category = categories[i];
         //Añadir boton al container con los datos de cada categoria
-        containerCategories.append('<button type="button" class="btn btn-outline-light inline animate__animated animate__fadeInLeft">'+category.name.toUpperCase()+'</button>');
+        //Agregarle evento onclick para que ejecute la peticion obtener por categoria
+        containerCategories.append('<a onclick=getProductsByCategory('+category.id+') type="button" class="btn btn-outline-light inline animate__animated animate__fadeInLeft" href="#section-products">'+category.name.toUpperCase()+'</a>');
     }
 }
 
@@ -75,8 +76,6 @@ function getAllProducts() {
         })
         .then(function () {
             //Siempre se ejecuta
-            //Esconder spinner al terminar el request
-            $('.spinner').hide();
         });
 }
 
@@ -146,7 +145,7 @@ function renderTotalPages(totalPages, queryActive) {
     //Recorrer la cantidad de veces de totalPages para crear la lista de pagination
     //Añadir el elemento con el evento click para poder hacer la peticion a la pagina deseada
     for (let i = 0; i < totalPages; i++) {
-        containerPagination.append(`<li class="page-item"><a class="page-link" href="#section-products" 
+        containerPagination.append(`<li class="page-item"><a class="page-link text-dark" href="#section-products" 
         onclick="getProductsPaginated(`+ i +`,'`+ queryActive +`')">`+ (i+1) +`</a></li>`);         
     }
 }
@@ -156,7 +155,7 @@ function getProductsPaginated(pageNro, queryActive) {
     let urlApi;
     //Formar la url completa para el request con el parametro queryActive o sin el si esta vacio
     if (queryActive.length > 0) {
-        urlApi = urlbaseApiRest+apiProducts+'?pageNo='+pageNro+'&'+queryActive;
+        urlApi = urlbaseApiRest+apiProducts+queryActive+'&pageNo='+pageNro;
     } else {
         urlApi = urlbaseApiRest+apiProducts+'?pageNo='+pageNro;
     }
@@ -172,8 +171,8 @@ function getProductsPaginated(pageNro, queryActive) {
             totalPages = response.data.totalPages;
             //Renderizar productos
             renderProducts(products);
-            //Renderizar totalPages
-            renderTotalPages(totalPages);
+            //Renderizar totalPages con query activo
+            renderTotalPages(totalPages,queryActive);
         })
         .catch(function (error) {
             //Manejar error
@@ -181,8 +180,35 @@ function getProductsPaginated(pageNro, queryActive) {
         })
         .then(function () {
             //Siempre se ejecuta
-            //Esconder spinner al terminar el request
-            $('.spinner').hide();
+        });
+}
+
+/*Obtener productos por categoria*/
+function getProductsByCategory(category) {
+    //Formar la url completa para el request con el parametro category
+    let query = '?category='+category;
+    let urlApi = urlbaseApiRest+apiProducts+query;
+    //request api products
+    axios.get(urlApi)
+        .then(function (response) {
+            //Manejar success
+            console.log(response);
+            //Almacenar data en array products
+            products = response.data.products;
+            //Setear totalPages
+            totalPages = response.data.totalPages;
+            //Renderizar productos
+            renderProducts(products);
+            //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
+            let queryActive = query;
+            renderTotalPages(totalPages,queryActive);
+        })
+        .catch(function (error) {
+            //Manejar error
+            console.log(error);
+        })
+        .then(function () {
+            //Siempre se ejecuta
         });
 }
 
