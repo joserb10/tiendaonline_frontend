@@ -109,7 +109,7 @@ function renderProducts(products) {
         <div class="col mb-5 animate__animated animate__bounceInUp">
             <div class="card h-100 card-product">
                 <!-- Oferta badge-->
-                <div class="badge bg-dark text-white position-absolute  `+ classHideBadges +`" style="top: 0.5rem; right: 0.5rem">Descuento de `+ product.discount +`%</div>
+                <div class="badge badge-custom bg-dark text-white position-absolute  `+ classHideBadges +`" style="top: 0.5rem; right: 0.5rem">Descuento de `+ product.discount +`%</div>
                 <!-- Product image-->
                 <img class="card-img-top product-img" src="`+ url_image +`"/>
                 <!-- Product details-->
@@ -202,6 +202,120 @@ function getProductsByCategory(category) {
             //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = query;
             renderTotalPages(totalPages,queryActive);
+        })
+        .catch(function (error) {
+            //Manejar error
+            console.log(error);
+        })
+        .then(function () {
+            //Siempre se ejecuta
+        });
+}
+
+/*Obtener productos por texto busqueda*/
+function getProductsByText() {
+    //Obtener valor del input search
+    let textSearch = $('.input-search').val();
+    let query = '?text=';
+    //Validar si textSearch tiene texto
+    if (textSearch.trim().length>0) {
+        query += textSearch;
+    } else {
+        query = '';
+    }
+
+    //Formar la url completa para el request con el parametro text
+    let urlApi = urlbaseApiRest+apiProducts+query;
+
+    //request api products
+    axios.get(urlApi)
+        .then(function (response) {
+            //Manejar success
+            console.log(response);
+            //Almacenar data en array products
+            products = response.data.products;
+            //Setear totalPages
+            totalPages = response.data.totalPages;
+            //Renderizar productos
+            renderProducts(products);
+            //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
+            let queryActive = query;
+            renderTotalPages(totalPages,queryActive);
+        })
+        .catch(function (error) {
+            //Manejar error
+            console.log(error);
+        })
+        .then(function () {
+            //Siempre se ejecuta
+        });
+}
+
+/*Obtener productos por rango de precios*/
+function getProductsByPriceRange() {
+    //Obtener valor del input min-price
+    let min_price = $('#min_price').val();
+    //Obtener valor del input max-price
+    let max_price = $('#max_price').val();
+    let query;
+    //Validar si min_price tiene valor diferente a null
+    if (!min_price || !max_price || min_price<0 || max_price<0) {
+        Swal.fire({
+            position: 'top-end',
+            background: '#D20505',
+            customClass: 'swal-small',
+            title: 'Ingresar el precio mínimo y máximo mayor igual a cero!',
+            showConfirmButton: false,
+            timer: 2000
+        });
+        return
+    } 
+    //Validar que min price sea menor o igual que max price 
+    if (parseInt(max_price) < parseInt(min_price)) {
+        Swal.fire({
+            position: 'top-end',
+            background: '#D20505',
+            customClass: 'swal-small',
+            title: 'El precio mínimo debe ser menor al precio máximo!',
+            showConfirmButton: false,
+            timer: 2000
+        });
+        return
+    } 
+
+    //Al pasar las validaciones
+    query = '?minPrice='+min_price+'&maxPrice='+max_price;
+
+    //Formar la url completa para el request con el parametro min y max price
+    let urlApi = urlbaseApiRest+apiProducts+query;
+
+    //request api products
+    axios.get(urlApi)
+        .then(function (response) {
+            //Manejar success
+            console.log(response);
+            //Almacenar data en array products
+            products = response.data.products;
+            //Validar que reques devuelva resultados
+            if(products.length>0) {
+                //Setear totalPages
+                totalPages = response.data.totalPages;
+                //Renderizar productos
+                renderProducts(products);
+                //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
+                let queryActive = query;
+                renderTotalPages(totalPages,queryActive);
+            } else {
+                Swal.fire({
+                    position: 'top-end',
+                    background: '#C85318',
+                    customClass: 'swal-small',
+                    title: 'No existen productos en ese rango de precios!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+            
         })
         .catch(function (error) {
             //Manejar error
