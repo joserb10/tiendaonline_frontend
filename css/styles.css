@@ -105,3 +105,10 @@
     height: 60px !important;
     width: 300px !important;
 }
+
+/*Customizar Swal Alert de añadir a carrito*/
+.swal-small-cart {
+    height: 43px !important;
+    width: 300px !important;
+}
+

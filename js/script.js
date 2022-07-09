@@ -7,6 +7,8 @@ const apiProducts = "products"
 var products = [];
 /*Variable total paginas de grupos de 8 productos*/
 var totalPages;
+/*Variable global para alamcenar productos de carrito*/
+var cartProducts = [];
 
 /*Obtener todas las categorías para mostrarlas al usuario*/
 function getCategories() {
@@ -119,7 +121,7 @@ function renderProducts(products) {
                         <h5 class="fw-bolder p-2 bg-dark text-white">`+ product.name +`</h5>
                         <!-- Product reviews-->
                         <div class="d-flex justify-content-center small text-warning mb-2">
-                            <span class="badge">`+ product.category.name.toUpperCase() +`</span>
+                            <span class="badge badge-custom">`+ product.category.name.toUpperCase() +`</span>
                         </div>
                         <!-- Product price-->
                         <span class="text-muted text-decoration-line-through  `+ classHideBadges +`">`+ product.price +`</span>
@@ -128,7 +130,7 @@ function renderProducts(products) {
                 </div>
                 <!-- Product actions-->
                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Añadir a carrito</a></div>
+                    <div class="text-center"><a onclick="addProductToCart(`+ product.id +`)" class="btn btn-outline-dark mt-auto">Añadir a carrito</a></div>
                 </div>
             </div>
         </div>
@@ -326,6 +328,141 @@ function getProductsByPriceRange() {
         });
 }
 
+/*Añadir producto a carrito*/
+function addProductToCart(productId) {
+    //Encontrar producto en array products
+    let product = products.find(p => p.id === productId);
+
+    //Validar que el producto no haya sido añadido previamente
+    let productInCart = cartProducts.find(p => p.id === productId);
+    if (productInCart) {
+        Swal.fire({
+            position: 'top-left',
+            background: '#FF5733',
+            customClass: 'swal-small-cart',
+            title: 'Este producto ya fue añadido al carrito!',
+            showConfirmButton: false,
+            timer: 1300
+        });
+        return;
+    }
+
+    //Seter el valor de cantidad de productos
+    product.cantidad = 1;
+    cartProducts.push(product);
+    //Alerta success
+    Swal.fire({
+        position: 'top-left',
+        background: '#4AD256',
+        customClass: 'swal-small-cart',
+        title: 'Este producto ya fue añadido al carrito!',
+        showConfirmButton: false,
+        timer: 1300
+    });
+
+    //Modicar contador de cart products
+    let counterCart = $('#counterCart');
+    counterCart.text(cartProducts.length);
+
+    //Renderizar productods en carrito de compras
+    renderCartProducts();
+    //Calcular total
+    calculateTotalPrice();
+}
+
+//Renderizar producto en carrito de compras
+function renderCartProducts() {
+    //Obtener elemento contenedor de productos de carrito
+    let cartContainer = $('#table-cart-container');
+    //Vaciar container
+    cartContainer.empty();
+    //Pintar productos
+    for (let i = 0; i < cartProducts.length; i++) {
+        const product = cartProducts[i];
+        cartContainer.append(`<tr>
+                            <td>
+                              <div class="d-flex align-items-center">
+                                <img
+                                    src="`+product.url_image+`"
+                                    alt=""
+                                    style="width: 60px; height: 60px"
+                                    class="rounded-circle"
+                                    />
+                              </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-dark">`+product.name+`</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">`+product.price+`.00</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">`+product.discount+`%</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-success">`+product.price * (100 - product.discount) / 100+`.00</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-warning">`+product.category.name+`</span>
+                            </td>
+                            <td>
+                                <input min="1" onkeypress="calculateTotalProduct(event,`+product.id+`)" onchange="calculateTotalProduct(event,`+product.id+`)" class="my-2 form-control input-quantity" type="number" value="`+product.cantidad+`"/>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">`+ product.price *product.cantidad* (100 - product.discount) / 100+`.00</span>
+                            </td>
+                            <td>
+                              <button onclick="quitarCartProduct(`+i+`)" type="button" class="btn btn-link btn-sm rounded">
+                                <i class="fas fa-trash text-danger fw-bolder"></i>
+                              </button>
+                            </td>
+                          </tr>`);
+    }
+}
+
+/*Calcular el precio total por producto*/
+function calculateTotalProduct(event, productId) {
+    let cantidad_ingresada;
+    //Validar si el evento es onchange o onkeypress
+    if(event.key) {
+        //Validar si la tecla no es una letra
+        if(isNaN(event.key)) {
+            return;
+        }
+        //Setear cantidad a objeto producto de array cartProducts
+        cantidad_ingresada = parseInt(event.key);
+        cartProducts.find(p=> p.id ===productId).cantidad = cantidad_ingresada;
+        renderCartProducts();
+    } else {
+        //Setear cantidad a objeto producto de array cartProducts
+        cantidad_ingresada = event.target.valueAsNumber;
+        cartProducts.find(p=> p.id ===productId).cantidad = cantidad_ingresada;
+        renderCartProducts();
+    }
+    //Calcular total
+    calculateTotalPrice();
+}
+
+/*Quitar producto de array cartProducts*/
+function quitarCartProduct(indexProduct) {
+    console.log('borrat'+indexProduct)
+    cartProducts.splice(indexProduct,1);
+    renderCartProducts();
+    //Calcular total
+    calculateTotalPrice();
+}
+
+/*Calcular el precio total*/
+function calculateTotalPrice() {
+    let totalPrice = 0;
+    for (let i = 0; i < cartProducts.length; i++) {
+        const product = cartProducts[i];
+        totalPrice += product.cantidad * product.price * (100 - product.discount) / 100;
+    }
+    //Setear valor a elemento html
+    let total = $('#total');
+    total.text(totalPrice.toFixed(2));
+}
 
 /* Ejecutar funciones getCategories y getAllProducts */
 function startup() {
