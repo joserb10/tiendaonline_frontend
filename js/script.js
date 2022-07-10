@@ -514,5 +514,21 @@ function orderProducts(event) {
     }  
 }
 
+/*Alerta de compra*/
+function alertCompra() {
+    console.log(cartProducts)
+    if (cartProducts.length<=0) {
+        return;
+    }
+    Swal.fire({
+        customClass: 'swal-black',
+        position: 'center',
+        icon: 'success',
+        title: 'Productos Comprados!',
+        showConfirmButton: false,
+        timer: 1500
+    })
+}
+
 /*Ejecutar funcion para obtener categorias al cargar la pagina y todos los productos*/
 window.addEventListener('load', startup, false);

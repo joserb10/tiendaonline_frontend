@@ -112,3 +112,8 @@
     width: 300px !important;
 }
 
+/*Customizar swal black para compra realizada*/
+.swal-black {
+  background-color: black !important;
+}
+
