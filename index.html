@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="Tienda Online Bebidas" />
         <meta name="author" content="Jose Rodriguez" />
-        <title>Shop Homepage - Start Bootstrap Template</title>
+        <title>Tienda Online BSale</title>
+        <link rel="shortcut icon" href="https://dojiw2m9tvv09.cloudfront.net/16738/2/favicon.ico?986" type="image/x-icon">
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Bootstrap CDN CSS-->
@@ -130,16 +131,36 @@
                                 <input class="my-2 form-control col-xs-6" type="number" id="max_price" value="20000"/>
                             </div>
                             <div class="col-md-2 d-flex justify-content-center">
-                                <button onclick="getProductsByPriceRange()" class="my-2 btn btn-outline-dark ">Filtrar</button>
+                                <a onclick="getProductsByPriceRange()" class="my-2 btn btn-outline-dark " href="#section-products">Filtrar</a>
                             </div>
                         </div>
                         
                     </div>
                 </div> 
             </div> 
-        </section>     
+        </section>  
+        <!-- Section Quantity Products-->
+        <section class="px-2 py-4 bg-dark">
+            
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-light text-dark"><h6>Productos Encontrados:
+                            <span id="quantity" class="badge bg-dark rounded-pill"></span>
+                         </h6></span>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" onchange="orderProducts(event)">
+                            <option selected hidden>Ordernar por: </option>
+                            <option value="1">Precio Mayor a Menor</option>
+                            <option value="2">Precio Menor a Mayor</option>
+                          </select>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- Section Productos-->
-        <section class="py-4" id="section-products">
+        <section class="py-3" id="section-products">
             <div class="container px-4 px-lg-5 mt-5">
                 <div id="containerProducts" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 </div>

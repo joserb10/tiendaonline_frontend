@@ -71,6 +71,9 @@ function getAllProducts() {
             //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = '';
             renderTotalPages(totalPages,queryActive);
+            //renderizar cantidad de productos
+            let totalItems = response.data.totalItems;
+            renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
             //Manejar error
@@ -175,6 +178,9 @@ function getProductsPaginated(pageNro, queryActive) {
             renderProducts(products);
             //Renderizar totalPages con query activo
             renderTotalPages(totalPages,queryActive);
+            //renderizar cantidad de productos
+            let totalItems = response.data.totalItems;
+            renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
             //Manejar error
@@ -204,6 +210,9 @@ function getProductsByCategory(category) {
             //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = query;
             renderTotalPages(totalPages,queryActive);
+            //renderizar cantidad de productos
+            let totalItems = response.data.totalItems;
+            renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
             //Manejar error
@@ -243,6 +252,9 @@ function getProductsByText() {
             //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = query;
             renderTotalPages(totalPages,queryActive);
+            //renderizar cantidad de productos
+            let totalItems = response.data.totalItems;
+            renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
             //Manejar error
@@ -260,7 +272,7 @@ function getProductsByPriceRange() {
     //Obtener valor del input max-price
     let max_price = $('#max_price').val();
     let query;
-    //Validar si min_price tiene valor diferente a null
+    //Validar si min_price tiene valor diferente a null y sea mayor a cero
     if (!min_price || !max_price || min_price<0 || max_price<0) {
         Swal.fire({
             position: 'top-end',
@@ -307,6 +319,9 @@ function getProductsByPriceRange() {
                 //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
                 let queryActive = query;
                 renderTotalPages(totalPages,queryActive);
+                //renderizar cantidad de productos
+                let totalItems = response.data.totalItems;
+                renderQuantityProducts(totalItems);
             } else {
                 Swal.fire({
                     position: 'top-end',
@@ -468,6 +483,35 @@ function calculateTotalPrice() {
 function startup() {
     getCategories();
     getAllProducts();
+}
+
+/*Renderizar cantidad de productos obtenidos*/
+function renderQuantityProducts(quantity) {
+    //Obtener elemento y setearle la cantidad
+    let containerQuantity = $('#quantity');
+    if (!quantity) {
+        containerQuantity.text('0');
+    } else {
+        containerQuantity.text(quantity);
+    }
+}
+
+/*Ordenar productos por precio*/
+function orderProducts(event) {
+    //Identificar que filtro fue seleccionado
+    if(event.target.value == 1) {
+        //Ordenar de mayor a menor
+        products.sort((a, b) => {
+            return (b.price * (100-b.discount))/100 - (a.price * (100-a.discount))/100 ;
+        });
+        renderProducts(products);
+    } else {
+        //Ordenar de menor a mayor
+        products.sort((a, b) => {
+            return (a.price * (100-a.discount))/100 - (b.price * (100-b.discount))/100 ;
+        });
+        renderProducts(products);
+    }  
 }
 
 /*Ejecutar funcion para obtener categorias al cargar la pagina y todos los productos*/
