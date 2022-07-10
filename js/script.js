@@ -1,5 +1,5 @@
 /* Url Endpoint ApiRest */
-const urlbaseApiRest = "http://localhost:8080/";
+const urlbaseApiRest = "http://34.205.223.61:8080/";
 const apiCategories = "categories";
 const apiProducts = "products"
 
