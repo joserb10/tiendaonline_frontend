@@ -355,7 +355,7 @@ function addProductToCart(productId) {
             position: 'top-left',
             background: '#FF5733',
             customClass: 'swal-small-cart',
-            title: 'Este producto ya fue añadido al carrito!',
+            title: 'Este producto ya fue añadido!',
             showConfirmButton: false,
             timer: 1300
         });
@@ -370,7 +370,7 @@ function addProductToCart(productId) {
         position: 'top-left',
         background: '#4AD256',
         customClass: 'swal-small-cart',
-        title: 'Este producto ya fue añadido al carrito!',
+        title: 'Producto añadido al carrito!',
         showConfirmButton: false,
         timer: 1300
     });
