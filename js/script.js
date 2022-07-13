@@ -307,11 +307,13 @@ function renderCartProducts() {
     
     for (let i = 0; i < cartProducts.length; i++) {
         const product = cartProducts[i];
+        let no_image = "assets/no_image.jpg";
+        let url_image = product.url_image ? product.url_image : no_image;
         cartContainer.append(`<tr>
                             <td>
                               <div class="d-flex align-items-center">
                                 <img
-                                    src="`+product.url_image+`"
+                                    src="`+url_image+`"
                                     alt=""
                                     style="width: 60px; height: 60px"
                                     class="rounded-circle"
