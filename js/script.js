@@ -182,6 +182,10 @@ function getProductsByText() {
 
     let urlApi = urlbaseApiRest+apiProducts+query;
 
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $("#section-products").offset().top
+    });
+
     axios.get(urlApi)
         .then(function (response) {
             console.log(response);
@@ -192,6 +196,16 @@ function getProductsByText() {
             renderTotalPages(totalPages,queryActive);
             let totalItems = response.data.totalItems;
             renderQuantityProducts(totalItems);
+            if (! (products.length >0)) {
+                Swal.fire({
+                    position: 'top-left',
+                    background: '#FF5733',
+                    customClass: 'swal-small-cart',
+                    title: 'No existen productos con ese nombre!',
+                    showConfirmButton: false,
+                    timer: 1300
+                });
+            }
         })
         .catch(function (error) {
             console.log(error);
