@@ -2,6 +2,20 @@
 title: Frontend
 ---
 
+# Objetivo Ejercicio
+
+La aplicación Tienda Online BSale muestra al usuario al ingresar a la Tienda las categorías de productos que existen en la tienda, así también muestra todos los productos que se venden. 
+
+El usuario puede filtrar los productos haciendo click en cualquiera de las categorías lo cual hará que se genere una petición a una api y devolverá los resultados filtrados y el usuario obtendrá por defecto la primera página de productos. Si el usuario desea navegar sobre las páginas simplemente debe dar click en el número de página que desee. 
+
+El usuario también puede obtener los productos filtrados por texto, podrá digitar el nombre del producto que desee obtener, y de igual manera se le mostrara el resultado que coincida con el texto que ingresó, en caso no existan productos con ese texto la aplicación le mostrará al usuario un mensaje de alerta.
+
+El usuario puede filtrar los productos por un rango de precios, el cual valida que el precio mínimo se menor o igual que el precio mayor, en caso se ingrese los precios correctamente el usuario obtendrá los productos que se encuentren dentro de ese rango.
+
+Adicionalmente el usaurio puede ordenar los productos de Mayor a Menor precio o viceversa haciendo click en el combo "Ordenar por".
+
+Finalmente el usuario puede añadir los productos a un carrito de compras, si el producto ya fue añadido al carrito no se podrá volver a añadir por lo cual el usaurio recibirá un mensaje de alerta. Una vez el usuario haya agregado todos los podructos que desea, podrá modificar las cantidades de cada producto y comprar los productos dando click en Comprar.
+
 # Frontend
 
 La aplicación web permite al cliente obtener productos filtrados por categoria, texto de busqueda, por rango de precios y poder añadir productos a un carrito de compra.
