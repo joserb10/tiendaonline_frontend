@@ -3,101 +3,72 @@ const urlbaseApiRest = "http://34.205.223.61:8080/";
 const apiCategories = "categories";
 const apiProducts = "products"
 
-/*Variable global para almacenar los productos*/
+/*Variable globales para almacenar los productos,productos de carrito y total paginas*/
 var products = [];
-/*Variable total paginas de grupos de 8 productos*/
 var totalPages;
-/*Variable global para alamcenar productos de carrito*/
 var cartProducts = [];
 
 /*Obtener todas las categorías para mostrarlas al usuario*/
 function getCategories() {
-    //Formar la url completa para el request
     let urlApi = urlbaseApiRest+apiCategories;
-    //Array para contener la data de categorias de la api
     let categories = [];
-    //request api categories
     axios.get(urlApi)
         .then(function (response) {
-            //Manejar success
             console.log(response);
-            //Almacenar data en array categories
             categories = response.data;
-            //Validar que se hay obtenido data de la api para ejecutar la funcion de renderizado de categorias
             if(categories.length > 0) {
-                //Renderizar categorias
                 renderCategories(categories);
             }
         })
         .catch(function (error) {
-            //Manejar error
             console.log(error);
         })
         .then(function () {
-            //Siempre se ejecuta
-            //Esconder spinner al terminar el request
             $('.spinner').hide();
         });
 }
 
 /*Renderizar las categorias en el html*/
 function renderCategories(categories) {
-    //Obtener elemento contenedor de las categorias
     let containerCategories = $('#containerCategories');
     
-    //Recorrer el array de categorias e insertar un boton por cada uno
     for (let i = 0; i < categories.length; i++) {
         const category = categories[i];
-        //Añadir boton al container con los datos de cada categoria
-        //Agregarle evento onclick para que ejecute la peticion obtener por categoria
         containerCategories.append('<a onclick=getProductsByCategory('+category.id+') type="button" class="btn btn-outline-light inline animate__animated animate__fadeInLeft" href="#section-products">'+category.name.toUpperCase()+'</a>');
     }
 }
 
+/*Obtener todos los productos sin filtro con paginación*/
 function getAllProducts() {
-    //Formar la url completa para el request sin el parametro category para obtener todos los productos
     let urlApi = urlbaseApiRest+apiProducts;
-    //request api products
     axios.get(urlApi)
         .then(function (response) {
-            //Manejar success
             console.log(response);
-            //Almacenar data en array products
             products = response.data.products;
-            //Setear totalPages
             totalPages = response.data.totalPages;
-            //Renderizar productos
             renderProducts(products);
-            //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = '';
             renderTotalPages(totalPages,queryActive);
-            //renderizar cantidad de productos
             let totalItems = response.data.totalItems;
             renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
-            //Manejar error
             console.log(error);
         })
         .then(function () {
-            //Siempre se ejecuta
         });
 }
 
-/*Generar cada elemento html por producto al ingresar a la pagina*/
+/*Renderizar un card por cada producto que se encuentre en el argumento products*/
 function renderProducts(products) {
-    //Obtener elemento contenedor de los productos y limpiarlo si es que tiene elementos
     let containerProducts = $('#containerProducts');
     containerProducts.empty();
 
-    //Recorrer initialProducts para generar elementos
     for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        //Imagen para productos que no poseen url_image
         let no_image = "assets/no_image.jpg";
         let url_image = product.url_image ? product.url_image : no_image;
 
-        //indicar si el producto tiene o no descuento
         let hasDiscount = product.discount>0 ? true: false;
         let priceWithDiscount = null;
         let classHideBadges = "";
@@ -105,11 +76,9 @@ function renderProducts(products) {
             priceWithDiscount = product.price * (100 - product.discount) / 100;
         } else {
             priceWithDiscount = product.price;
-            //Class para esconder badges
             classHideBadges = "display_none";
         }
 
-        //Añadir elemento con sus datos al contenedor de productos
         containerProducts.append(`
         <div class="col mb-5 animate__animated animate__bounceInUp">
             <div class="card h-100 card-product">
@@ -141,91 +110,67 @@ function renderProducts(products) {
     }
 }
 
-/*Crear elementos de Pagination*/
+/*Crear elementos numerados de Pagination*/
 function renderTotalPages(totalPages, queryActive) {
-    //Obtener elemento contenedor de pagination y limpiarlo si es que tiene elementos
     let containerPagination = $('#containerPagination');
     containerPagination.empty();
 
-    //Recorrer la cantidad de veces de totalPages para crear la lista de pagination
-    //Añadir el elemento con el evento click para poder hacer la peticion a la pagina deseada
     for (let i = 0; i < totalPages; i++) {
         containerPagination.append(`<li class="page-item"><a class="page-link text-dark" href="#section-products" 
         onclick="getProductsPaginated(`+ i +`,'`+ queryActive +`')">`+ (i+1) +`</a></li>`);         
     }
 }
 
-/*Obtener productos de una página específica*/
+/*Obtener productos de un número de página específico*/
 function getProductsPaginated(pageNro, queryActive) {
     let urlApi;
-    //Formar la url completa para el request con el parametro queryActive o sin el si esta vacio
     if (queryActive.length > 0) {
         urlApi = urlbaseApiRest+apiProducts+queryActive+'&pageNo='+pageNro;
     } else {
         urlApi = urlbaseApiRest+apiProducts+'?pageNo='+pageNro;
     }
 
-    //request api products
     axios.get(urlApi)
         .then(function (response) {
-            //Manejar success
             console.log(response);
-            //Almacenar data en array products
             products = response.data.products;
-            //Setear totalPages
             totalPages = response.data.totalPages;
-            //Renderizar productos
             renderProducts(products);
-            //Renderizar totalPages con query activo
             renderTotalPages(totalPages,queryActive);
-            //renderizar cantidad de productos
             let totalItems = response.data.totalItems;
             renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
-            //Manejar error
             console.log(error);
         })
         .then(function () {
-            //Siempre se ejecuta
         });
 }
 
-/*Obtener productos por categoria*/
+/*Obtener productos filtrados por categoria y paginado*/
 function getProductsByCategory(category) {
-    //Formar la url completa para el request con el parametro category
     let query = '?category='+category;
     let urlApi = urlbaseApiRest+apiProducts+query;
-    //request api products
     axios.get(urlApi)
         .then(function (response) {
-            //Manejar success
             console.log(response);
-            //Almacenar data en array products
             products = response.data.products;
-            //Setear totalPages
             totalPages = response.data.totalPages;
-            //Renderizar productos
             renderProducts(products);
-            //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = query;
             renderTotalPages(totalPages,queryActive);
-            //renderizar cantidad de productos
             let totalItems = response.data.totalItems;
             renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
-            //Manejar error
             console.log(error);
         })
         .then(function () {
-            //Siempre se ejecuta
         });
 }
 
-/*Obtener productos por texto busqueda*/
+/*Obtener productos filtrado por texto de búsqueda y paginado*/
 function getProductsByText() {
-    //Obtener valor del input search
     let textSearch = $('.input-search').val();
     let query = '?text=';
     //Validar si textSearch tiene texto
@@ -235,41 +180,29 @@ function getProductsByText() {
         query = '';
     }
 
-    //Formar la url completa para el request con el parametro text
     let urlApi = urlbaseApiRest+apiProducts+query;
 
-    //request api products
     axios.get(urlApi)
         .then(function (response) {
-            //Manejar success
             console.log(response);
-            //Almacenar data en array products
             products = response.data.products;
-            //Setear totalPages
             totalPages = response.data.totalPages;
-            //Renderizar productos
             renderProducts(products);
-            //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
             let queryActive = query;
             renderTotalPages(totalPages,queryActive);
-            //renderizar cantidad de productos
             let totalItems = response.data.totalItems;
             renderQuantityProducts(totalItems);
         })
         .catch(function (error) {
-            //Manejar error
             console.log(error);
         })
         .then(function () {
-            //Siempre se ejecuta
         });
 }
 
 /*Obtener productos por rango de precios*/
 function getProductsByPriceRange() {
-    //Obtener valor del input min-price
     let min_price = $('#min_price').val();
-    //Obtener valor del input max-price
     let max_price = $('#max_price').val();
     let query;
     //Validar si min_price tiene valor diferente a null y sea mayor a cero
@@ -297,29 +230,19 @@ function getProductsByPriceRange() {
         return
     } 
 
-    //Al pasar las validaciones
     query = '?minPrice='+min_price+'&maxPrice='+max_price;
 
-    //Formar la url completa para el request con el parametro min y max price
     let urlApi = urlbaseApiRest+apiProducts+query;
 
-    //request api products
     axios.get(urlApi)
         .then(function (response) {
-            //Manejar success
             console.log(response);
-            //Almacenar data en array products
             products = response.data.products;
-            //Validar que reques devuelva resultados
             if(products.length>0) {
-                //Setear totalPages
                 totalPages = response.data.totalPages;
-                //Renderizar productos
                 renderProducts(products);
-                //Renderizar totalPages con parametro adicional de query activo para añadirlo al request
                 let queryActive = query;
                 renderTotalPages(totalPages,queryActive);
-                //renderizar cantidad de productos
                 let totalItems = response.data.totalItems;
                 renderQuantityProducts(totalItems);
             } else {
@@ -335,17 +258,14 @@ function getProductsByPriceRange() {
             
         })
         .catch(function (error) {
-            //Manejar error
             console.log(error);
         })
         .then(function () {
-            //Siempre se ejecuta
         });
 }
 
 /*Añadir producto a carrito*/
 function addProductToCart(productId) {
-    //Encontrar producto en array products
     let product = products.find(p => p.id === productId);
 
     //Validar que el producto no haya sido añadido previamente
@@ -362,10 +282,8 @@ function addProductToCart(productId) {
         return;
     }
 
-    //Seter el valor de cantidad de productos
     product.cantidad = 1;
     cartProducts.push(product);
-    //Alerta success
     Swal.fire({
         position: 'top-left',
         background: '#4AD256',
@@ -375,23 +293,18 @@ function addProductToCart(productId) {
         timer: 1300
     });
 
-    //Modicar contador de cart products
     let counterCart = $('#counterCart');
     counterCart.text(cartProducts.length);
 
-    //Renderizar productods en carrito de compras
     renderCartProducts();
-    //Calcular total
     calculateTotalPrice();
 }
 
-//Renderizar producto en carrito de compras
+/*Renderizar productos que están dentro de carrito de compras*/
 function renderCartProducts() {
-    //Obtener elemento contenedor de productos de carrito
     let cartContainer = $('#table-cart-container');
-    //Vaciar container
     cartContainer.empty();
-    //Pintar productos
+    
     for (let i = 0; i < cartProducts.length; i++) {
         const product = cartProducts[i];
         cartContainer.append(`<tr>
@@ -438,23 +351,22 @@ function renderCartProducts() {
 /*Calcular el precio total por producto*/
 function calculateTotalProduct(event, productId) {
     let cantidad_ingresada;
+
     //Validar si el evento es onchange o onkeypress
     if(event.key) {
         //Validar si la tecla no es una letra
         if(isNaN(event.key)) {
             return;
         }
-        //Setear cantidad a objeto producto de array cartProducts
         cantidad_ingresada = parseInt(event.key);
         cartProducts.find(p=> p.id ===productId).cantidad = cantidad_ingresada;
         renderCartProducts();
     } else {
-        //Setear cantidad a objeto producto de array cartProducts
         cantidad_ingresada = event.target.valueAsNumber;
         cartProducts.find(p=> p.id ===productId).cantidad = cantidad_ingresada;
         renderCartProducts();
     }
-    //Calcular total
+
     calculateTotalPrice();
 }
 
@@ -463,18 +375,18 @@ function quitarCartProduct(indexProduct) {
     console.log('borrat'+indexProduct)
     cartProducts.splice(indexProduct,1);
     renderCartProducts();
-    //Calcular total
     calculateTotalPrice();
 }
 
-/*Calcular el precio total*/
+/*Calcular el precio total total*/
 function calculateTotalPrice() {
     let totalPrice = 0;
+
     for (let i = 0; i < cartProducts.length; i++) {
         const product = cartProducts[i];
         totalPrice += product.cantidad * product.price * (100 - product.discount) / 100;
     }
-    //Setear valor a elemento html
+
     let total = $('#total');
     total.text(totalPrice.toFixed(2));
 }
@@ -487,7 +399,6 @@ function startup() {
 
 /*Renderizar cantidad de productos obtenidos*/
 function renderQuantityProducts(quantity) {
-    //Obtener elemento y setearle la cantidad
     let containerQuantity = $('#quantity');
     if (!quantity) {
         containerQuantity.text('0');
@@ -498,7 +409,6 @@ function renderQuantityProducts(quantity) {
 
 /*Ordenar productos por precio*/
 function orderProducts(event) {
-    //Identificar que filtro fue seleccionado
     if(event.target.value == 1) {
         //Ordenar de mayor a menor
         products.sort((a, b) => {
