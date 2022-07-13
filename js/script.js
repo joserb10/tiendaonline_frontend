@@ -200,6 +200,13 @@ function getProductsByText() {
         });
 }
 
+/*Al presionar enter buscar productos por texto*/
+function onPressEnterSearchProductos(event) {
+    if (event.keyCode == 13) {
+        getProductsByText();     
+    }
+}
+
 /*Obtener productos por rango de precios*/
 function getProductsByPriceRange() {
     let min_price = $('#min_price').val();
