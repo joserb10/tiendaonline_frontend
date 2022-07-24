@@ -1,5 +1,6 @@
 /* Url Endpoint ApiRest */
-const urlbaseApiRest = "http://34.205.223.61:8080/";
+//const urlbaseApiRest = "http://34.205.223.61:8080/";
+const urlbaseApiRest = "http://35.172.128.204:8080/";
 const apiCategories = "categories";
 const apiProducts = "products"
 
